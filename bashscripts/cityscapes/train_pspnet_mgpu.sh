@@ -10,7 +10,7 @@
 #
 
 # Set up parameters for training.
-BATCH_SIZE=8
+BATCH_SIZE=4
 TRAIN_INPUT_SIZE=720,720
 WEIGHT_DECAY=5e-4
 ITER_SIZE=1
@@ -35,7 +35,7 @@ IS_BENCHMARK=1
 export PYTHONPATH=`pwd`:$PYTHONPATH
 
 # Set up the data directory.
-DATAROOT=/path/to/data
+DATAROOT=/data/huijun
 
 # Train.
 if [ ${IS_TRAIN} -eq 1 ]; then
