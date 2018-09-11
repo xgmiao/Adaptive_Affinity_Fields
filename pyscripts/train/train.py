@@ -125,19 +125,19 @@ def main():
 	step_ph = tf.placeholder(dtype=tf.float32, shape=())
 	
 	# Load the data reader.
-	# with tf.device('/gpu:1'):
-	with tf.name_scope('create_inputs'):
-		reader = ImageReader(
-			args.data_dir,
-			args.data_list,
-			input_size,
-			args.random_scale,
-			args.random_mirror,
-			args.random_crop,
-			args.ignore_label,
-			IMG_MEAN)
-		
-		image_batch, label_batch = reader.dequeue(args.batch_size)
+	with tf.device('/cpu:0'):
+		with tf.name_scope('create_inputs'):
+			reader = ImageReader(
+				args.data_dir,
+				args.data_list,
+				input_size,
+				args.random_scale,
+				args.random_mirror,
+				args.random_crop,
+				args.ignore_label,
+				IMG_MEAN)
+			
+			image_batch, label_batch = reader.dequeue(args.batch_size)
 	
 	# Shrink labels to the size of the network output.
 	labels = tf.image.resize_nearest_neighbor(
@@ -208,43 +208,43 @@ def main():
 	train_op = tf.group(train_op_base, train_op_fc)
 	
 	# Process for visualisation.
-	# with tf.device('/cpu:0'):
-	# Image summary for input image, ground-truth label and prediction.
-	output_vis = tf.image.resize_nearest_neighbor(
-		outputs[-1], tf.shape(image_batch)[1:3,])
-	output_vis = tf.argmax(output_vis, axis=3)
-	output_vis = tf.expand_dims(output_vis, dim=3)
-	output_vis = tf.cast(output_vis, dtype=tf.uint8)
-	
-	labels_vis = tf.cast(label_batch, dtype=tf.uint8)
-	
-	in_summary = tf.py_func(
-		utils.general.inv_preprocess,
-		[image_batch, IMG_MEAN],
-		tf.uint8)
-	gt_summary = tf.py_func(
-		utils.general.decode_labels,
-		[labels_vis, args.num_classes],
-		tf.uint8)
-	out_summary = tf.py_func(
-		utils.general.decode_labels,
-		[output_vis, args.num_classes],
-		tf.uint8)
-	
-	# Concatenate image summaries in a row.
-	total_summary = tf.summary.image(
-		'images',
-		tf.concat(axis=2, values=[in_summary, gt_summary, out_summary]),
-		max_outputs=args.batch_size)
-	
-	# Scalar summary for different loss terms.
-	seg_loss_summary = tf.summary.scalar(
-		'seg_loss', mean_seg_loss)
-	total_summary = tf.summary.merge_all()
-	
-	summary_writer = tf.summary.FileWriter(
-		args.snapshot_dir,
-		graph=tf.get_default_graph())
+	with tf.device('/cpu:0'):
+		# Image summary for input image, ground-truth label and prediction.
+		output_vis = tf.image.resize_nearest_neighbor(
+			outputs[-1], tf.shape(image_batch)[1:3,])
+		output_vis = tf.argmax(output_vis, axis=3)
+		output_vis = tf.expand_dims(output_vis, dim=3)
+		output_vis = tf.cast(output_vis, dtype=tf.uint8)
+		
+		labels_vis = tf.cast(label_batch, dtype=tf.uint8)
+		
+		in_summary = tf.py_func(
+			utils.general.inv_preprocess,
+			[image_batch, IMG_MEAN],
+			tf.uint8)
+		gt_summary = tf.py_func(
+			utils.general.decode_labels,
+			[labels_vis, args.num_classes],
+			tf.uint8)
+		out_summary = tf.py_func(
+			utils.general.decode_labels,
+			[output_vis, args.num_classes],
+			tf.uint8)
+		
+		# Concatenate image summaries in a row.
+		total_summary = tf.summary.image(
+			'images',
+			tf.concat(axis=2, values=[in_summary, gt_summary, out_summary]),
+			max_outputs=args.batch_size)
+		
+		# Scalar summary for different loss terms.
+		seg_loss_summary = tf.summary.scalar(
+			'seg_loss', mean_seg_loss)
+		total_summary = tf.summary.merge_all()
+		
+		summary_writer = tf.summary.FileWriter(
+			args.snapshot_dir,
+			graph=tf.get_default_graph())
 	
 	# Set up tf session and initialize variables.
 	config = tf.ConfigProto()

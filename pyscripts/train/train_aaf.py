@@ -188,21 +188,21 @@ def main():
 		seg_losses.append(seg_loss)
 		
 		# Define AAF loss.
-		prob = tf.nn.softmax(output, dim=-1)
+		prob = tf.nn.softmax(output, axis=-1)
 		w_edge = tf.get_variable(
 			name='edge_w',
 			shape=(1, 1, 1, args.num_classes, 1, 3),
 			dtype=tf.float32,
 			initializer=tf.constant_initializer(0))
 		
-		w_edge = tf.nn.softmax(w_edge, dim=-1)
+		w_edge = tf.nn.softmax(w_edge, axis=-1)
 		
 		w_not_edge = tf.get_variable(
 			name='nonedge_w',
 			shape=(1, 1, 1, args.num_classes, 1, 3),
 			dtype=tf.float32,
 			initializer=tf.constant_initializer(0))
-		w_not_edge = tf.nn.softmax(w_not_edge, dim=-1)
+		w_not_edge = tf.nn.softmax(w_not_edge, axis=-1)
 		
 		n, h, w = w_edge.get_shape().as_list()[:3]
 		

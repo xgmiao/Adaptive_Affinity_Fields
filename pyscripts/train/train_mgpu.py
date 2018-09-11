@@ -150,10 +150,19 @@ def main():
 	labels_mgpu = nn_mgpu.split(label_batch, args.num_gpu)
 	
 	# Create network and output predictions.
-	outputs_mgpu = model(images_mgpu,
+	# outputs_mgpu = model(images_mgpu,
+	# 					 args.num_classes,
+	# 					 args.is_training,
+	# 					 args.use_global_status)
+	
+	outputs_mgpu= []
+	for images in images_mgpu:
+		with tf.device(images.device):
+			outputs = model(images,
 						 args.num_classes,
 						 args.is_training,
 						 args.use_global_status)
+			outputs_mgpu.append(outputs)
 	
 	# Grab variable names which should be restored from checkpoints.
 	restore_var = [
@@ -327,4 +336,5 @@ def main():
 
 
 if __name__ == '__main__':
+	os.environ['CUDA_VISIBLE_DEVICES']='0,3'
 	main()

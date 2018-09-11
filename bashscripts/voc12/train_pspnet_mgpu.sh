@@ -11,13 +11,13 @@
 #
 
 # Set up parameters for training.
-BATCH_SIZE=16
+BATCH_SIZE=8
 TRAIN_INPUT_SIZE=480,480
 WEIGHT_DECAY=5e-4
 ITER_SIZE=1
 NUM_STEPS=30000
 NUM_CLASSES=21
-NUM_GPU=4
+NUM_GPU=2
 
 # Set up parameters for inference.
 INFERENCE_INPUT_SIZE=480,480
@@ -31,15 +31,15 @@ SNAPSHOT_DIR=snapshots/voc12/pspnet/p480_bs16_lr1e-3_it30k
 IS_TRAIN_1=1
 IS_INFERENCE_1=1
 IS_BENCHMARK_1=1
-IS_TRAIN_2=1
-IS_INFERENCE_2=1
-IS_BENCHMARK_2=1
+IS_TRAIN_2=0
+IS_INFERENCE_2=0
+IS_BENCHMARK_2=0
 
 # Update PYTHONPATH.
 export PYTHONPATH=`pwd`:$PYTHONPATH
 
 # Set up the data directory.
-DATAROOT=/path/to/data
+DATAROOT=/data/xiaguomiao/VOCdevkit_Aug
 
 # Train for the 1st stage.
 if [ ${IS_TRAIN_1} -eq 1 ]; then
@@ -47,7 +47,7 @@ if [ ${IS_TRAIN_1} -eq 1 ]; then
     --snapshot-dir ${SNAPSHOT_DIR}/stage1\
     --restore-from snapshots/imagenet/trained/resnet_v1_101.ckpt\
     --data-list dataset/voc12/train+.txt\
-    --data-dir ${DATAROOT}/VOCdevkit/\
+    --data-dir ${DATAROOT}/\
     --batch-size ${BATCH_SIZE}\
     --save-pred-every ${NUM_STEPS}\
     --update-tb-every 50\
@@ -68,7 +68,7 @@ fi
 # Inference for the 1st stage.
 if [ ${IS_INFERENCE_1} -eq 1 ]; then
   python3 pyscripts/inference/inference.py\
-    --data-dir ${DATAROOT}/VOCdevkit/\
+    --data-dir ${DATAROOT}/\
     --data-list dataset/voc12/${INFERENCE_SPLIT}.txt\
     --input-size ${INFERENCE_INPUT_SIZE}\
     --strides ${INFERENCE_STRIDES}\
@@ -83,7 +83,7 @@ fi
 if [ ${IS_BENCHMARK_1} -eq 1 ]; then
   python3 pyscripts/benchmark/benchmark_by_mIoU.py\
     --pred-dir ${SNAPSHOT_DIR}/stage1/results/${INFERENCE_SPLIT}/gray/\
-    --gt-dir ${DATAROOT}/VOCdevkit/VOC2012/segcls/\
+    --gt-dir ${DATAROOT}/VOC2012/segcls/\
     --num-classes ${NUM_CLASSES}
 fi
 
@@ -93,7 +93,7 @@ if [ ${IS_TRAIN_2} -eq 1 ]; then
     --snapshot-dir ${SNAPSHOT_DIR}/stage2\
     --restore-from ${SNAPSHOT_DIR}/stage1/model.ckpt-30000\
     --data-list dataset/voc12/train.txt\
-    --data-dir ${DATAROOT}/VOCdevkit/\
+    --data-dir ${DATAROOT}/\
     --batch-size ${BATCH_SIZE}\
     --save-pred-every ${NUM_STEPS}\
     --update-tb-every 50\
@@ -113,7 +113,7 @@ fi
 # Inference for the 2nd stage.
 if [ ${IS_INFERENCE_2} -eq 1 ]; then
   python3 pyscripts/inference/inference_msc.py\
-    --data-dir ${DATAROOT}/VOCdevkit/\
+    --data-dir ${DATAROOT}/\
     --data-list dataset/voc12/${INFERENCE_SPLIT}.txt\
     --input-size ${INFERENCE_INPUT_SIZE}\
     --strides ${INFERENCE_STRIDES}\
@@ -130,6 +130,6 @@ fi
 if [ ${IS_BENCHMARK_2} -eq 1 ]; then
   python3 pyscripts/benchmark/benchmark_by_mIoU.py\
     --pred-dir ${SNAPSHOT_DIR}/stage2/results/${INFERENCE_SPLIT}/gray/\
-    --gt-dir ${DATAROOT}/VOCdevkit/VOC2012/segcls/\
+    --gt-dir ${DATAROOT}/VOC2012/segcls/\
     --num-classes ${NUM_CLASSES}
 fi

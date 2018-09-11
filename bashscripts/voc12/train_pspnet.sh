@@ -6,8 +6,7 @@
 # Usage:
 #   # From Adaptive_Affinity_Fields/ directory.
 #   bash bashscripts/voc12/train_pspnet.sh
-#
-#
+
 
 # Set up parameters for training.
 BATCH_SIZE=4

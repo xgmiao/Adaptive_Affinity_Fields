@@ -184,7 +184,7 @@ def main():
 		seg_losses.append(seg_loss)
 		
 		# Define AFF loss.
-		prob = tf.nn.softmax(output, dim=-1)
+		prob = tf.nn.softmax(output, axis=-1)
 		edge_loss, not_edge_loss = lossx.affinity_loss(labels,
 													   prob,
 													   args.num_classes,
@@ -328,4 +328,5 @@ def main():
 
 
 if __name__ == '__main__':
+	os.environ["CUDA_VISIBLE_DEVICES"] = "1,2"
 	main()

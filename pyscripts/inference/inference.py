@@ -123,7 +123,7 @@ def main():
 		output,
 		tf.shape(crop_image_batch)[1:3, ])
 	
-	output = tf.nn.softmax(output, dim=3)
+	output = tf.nn.softmax(output, axis=3)
 	
 	# Set up tf session and initialize variables.
 	config = tf.ConfigProto()
