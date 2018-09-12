@@ -29,8 +29,8 @@ INFERENCE_SPLIT=val
 SNAPSHOT_DIR=snapshots/voc12/pspnet_affinity/p336_bs8_lr1e-3_kld3e0_it30k
 
 # Set up the procedure pipeline.
-IS_TRAIN_1=1
-IS_INFERENCE_1=1
+IS_TRAIN_1=0
+IS_INFERENCE_1=0
 IS_BENCHMARK_1=1
 IS_TRAIN_2=0
 IS_INFERENCE_2=0
@@ -84,10 +84,10 @@ fi
 
 # Benchmark for the 1st stage.
 if [ ${IS_BENCHMARK_1} -eq 1 ]; then
-  python3 pyscripts/benchmark/benchmark_by_mIoU.py\
+  python3 pyscripts/benchmark/benchmark_by_mIoU.py \
+    --dataset 'voc' \
     --pred-dir ${SNAPSHOT_DIR}/stage1/results/${INFERENCE_SPLIT}/gray/\
-    --gt-dir ${DATAROOT}/VOC2012/segcls/\
-    --num-classes ${NUM_CLASSES}
+    --gt-dir ${DATAROOT}/VOC2012/segcls/
 fi
 
 # Train for the 2nd stage.
@@ -134,7 +134,7 @@ fi
 # Benchmark for the 2nd stage.
 if [ ${IS_BENCHMARK_2} -eq 1 ]; then
   python3 pyscripts/benchmark/benchmark_by_mIoU.py\
+    --dataset 'voc' \
     --pred-dir ${SNAPSHOT_DIR}/stage2/results/${INFERENCE_SPLIT}/gray/\
-    --gt-dir ${DATAROOT}/VOC2012/segcls/\
-    --num-classes ${NUM_CLASSES}
+    --gt-dir ${DATAROOT}/VOC2012/segcls/
 fi

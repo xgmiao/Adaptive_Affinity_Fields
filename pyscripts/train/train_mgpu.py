@@ -126,7 +126,6 @@ def main():
 	
 	# Create queue coordinator.
 	coord = tf.train.Coordinator()
-	
 	# current step
 	step_ph = tf.placeholder(dtype=tf.float32, shape=())
 	
@@ -292,6 +291,7 @@ def main():
 	
 	# Load variables if the checkpoint is provided.
 	if args.restore_from is not None:
+		
 		loader = tf.train.Saver(var_list=restore_var)
 		load(loader, sess, args.restore_from)
 	
