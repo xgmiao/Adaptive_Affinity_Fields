@@ -25,8 +25,8 @@ INFERENCE_SPLIT=val
 SNAPSHOT_DIR=snapshots/voc12/pspnet/p336_bs8_lr1e-3_it30k
 
 # Set up the procedure pipeline.
-IS_TRAIN_1=1
-IS_INFERENCE_1=1
+IS_TRAIN_1=0
+IS_INFERENCE_1=0
 IS_BENCHMARK_1=1
 IS_TRAIN_2=0
 IS_INFERENCE_2=0
@@ -43,7 +43,7 @@ if [ ${IS_TRAIN_1} -eq 1 ]; then
   python3 pyscripts/train/train.py\
     --snapshot-dir ${SNAPSHOT_DIR}/stage1\
     --restore-from snapshots/imagenet/trained/resnet_v1_101.ckpt\
-    --data-list dataset/voc12/train.txt\
+    --data-list dataset/voc12/train+.txt\
     --data-dir ${DATAROOT}/\
     --batch-size ${BATCH_SIZE}\
     --save-pred-every ${NUM_STEPS}\

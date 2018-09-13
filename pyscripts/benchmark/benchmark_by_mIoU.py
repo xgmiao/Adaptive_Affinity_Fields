@@ -57,6 +57,9 @@ from utils.metrics import iou_stats
 def calcu_voc_mIou(pred_dir, gt_dir):
 	assert os.path.isdir(pred_dir)
 	assert os.path.isdir(gt_dir)
+	
+	print('......')
+	
 	n_class = 21
 	tp_fn = np.zeros(n_class, dtype=np.float64)
 	tp_fp = np.zeros(n_class, dtype=np.float64)

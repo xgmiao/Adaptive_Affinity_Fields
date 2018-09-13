@@ -14,7 +14,7 @@ BATCH_SIZE=4
 TRAIN_INPUT_SIZE=336,336
 WEIGHT_DECAY=5e-4
 ITER_SIZE=1
-NUM_STEPS=30000
+NUM_STEPS=1000
 NUM_CLASSES=21
 KLD_MARGIN=3.0
 KLD_LAMBDA_1=1.0
@@ -29,8 +29,8 @@ INFERENCE_SPLIT=val
 SNAPSHOT_DIR=snapshots/voc12/pspnet_affinity/p336_bs8_lr1e-3_kld3e0_it30k
 
 # Set up the procedure pipeline.
-IS_TRAIN_1=0
-IS_INFERENCE_1=0
+IS_TRAIN_1=1
+IS_INFERENCE_1=1
 IS_BENCHMARK_1=1
 IS_TRAIN_2=0
 IS_INFERENCE_2=0
@@ -47,7 +47,7 @@ if [ ${IS_TRAIN_1} -eq 1 ]; then
   python3 pyscripts/train/train_affinity.py\
     --snapshot-dir ${SNAPSHOT_DIR}/stage1\
     --restore-from snapshots/imagenet/trained/resnet_v1_101.ckpt\
-    --data-list dataset/voc12/train+.txt\
+    --data-list dataset/voc12/train.txt\
     --data-dir ${DATAROOT}/\
     --batch-size ${BATCH_SIZE}\
     --save-pred-every ${NUM_STEPS}\
