@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" autoUpload="Always" serverName="gs3">
+  <component name="PublishConfigData" autoUpload="Always" serverName="gs12">
     <serverData>
+      <paths name="gs12">
+        <serverdata>
+          <mappings>
+            <mapping deploy="Adaptive_Affinity_Fields" local="$PROJECT_DIR$" />
+          </mappings>
+        </serverdata>
+      </paths>
       <paths name="gs3">
         <serverdata>
           <mappings>

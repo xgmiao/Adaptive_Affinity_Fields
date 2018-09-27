@@ -25,9 +25,9 @@ INFERENCE_SPLIT=val
 SNAPSHOT_DIR=snapshots/voc12/pspnet/p336_bs8_lr1e-3_it30k
 
 # Set up the procedure pipeline.
-IS_TRAIN_1=0
+IS_TRAIN_1=1
 IS_INFERENCE_1=0
-IS_BENCHMARK_1=1
+IS_BENCHMARK_1=0
 IS_TRAIN_2=0
 IS_INFERENCE_2=0
 IS_BENCHMARK_2=0
@@ -36,7 +36,7 @@ IS_BENCHMARK_2=0
 export PYTHONPATH=`pwd`:$PYTHONPATH
 
 # Set up the data directory.
-DATAROOT=/data/xiaguomiao/VOCdevkit_Aug
+DATAROOT=/data/xiaguomiao/VOC2012_Aug
 
 # Train for the 1st stage.
 if [ ${IS_TRAIN_1} -eq 1 ]; then

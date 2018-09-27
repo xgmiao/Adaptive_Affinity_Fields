@@ -32,17 +32,17 @@ SNAPSHOT_DIR=snapshots/voc12/pspnet_affinity/p480_bs16_lr1e-3_kld3e0_it30k
 
 # Set up the procedure pipeline.
 IS_TRAIN_1=1
-IS_INFERENCE_1=1
-IS_BENCHMARK_1=1
-IS_TRAIN_2=1
-IS_INFERENCE_2=1
-IS_BENCHMARK_2=1
+IS_INFERENCE_1=0
+IS_BENCHMARK_1=0
+IS_TRAIN_2=0
+IS_INFERENCE_2=0
+IS_BENCHMARK_2=0
 
 # Update PYTHONPATH.
 export PYTHONPATH=`pwd`:$PYTHONPATH
 
 # Set up the data directory.
-DATAROOT=/path/to/data
+DATAROOT=/data/xiaguomiao/VOC2012_Aug
 
 # Train for the 1st stage.
 if [ ${IS_TRAIN_1} -eq 1 ]; then

@@ -17,7 +17,7 @@ WEIGHT_DECAY=5e-4
 ITER_SIZE=1
 NUM_STEPS=30000
 NUM_CLASSES=21
-NUM_GPU=2
+NUM_GPU=3
 
 # Set up parameters for inference.
 INFERENCE_INPUT_SIZE=480,480
@@ -39,7 +39,7 @@ IS_BENCHMARK_2=0
 export PYTHONPATH=`pwd`:$PYTHONPATH
 
 # Set up the data directory.
-DATAROOT=/data/xiaguomiao/VOCdevkit_Aug
+DATAROOT=/data/xiaguomiao/VOC2012_Aug
 
 # Train for the 1st stage.
 if [ ${IS_TRAIN_1} -eq 1 ]; then

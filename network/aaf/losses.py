@@ -3,10 +3,7 @@ import tensorflow as tf
 import network.aaf.layers as nnx
 
 
-def affinity_loss(labels,
-				  probs,
-				  num_classes,
-				  kld_margin):
+def affinity_loss(labels,probs,num_classes,kld_margin):
 	"""Affinity Field (AFF) loss.
 	This function computes AFF loss. There are several components in the
 	function:

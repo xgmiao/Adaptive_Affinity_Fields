@@ -1,25 +1,25 @@
 from __future__ import print_function
 
 import argparse
-import math
 import os
 import time
+import math
 
-import numpy as np
 import tensorflow as tf
+import numpy as np
 from tqdm import tqdm
 
+from seg_models.models.pspnet_mgpu import pspnet_resnet101 as model
+from seg_models.image_reader import ImageReader
 import network.multigpu.layers as nn_mgpu
 import utils.general
-from seg_models.image_reader import ImageReader
-from seg_models.models.pspnet import pspnet_resnet101 as model
 
 IMG_MEAN = np.array((122.675, 116.669, 104.008), dtype=np.float32)
 
 
 def get_arguments():
 	"""Parse all the arguments provided from the CLI.
-	
+ 
 	Returns:
 	  A list of parsed arguments.
 	"""
@@ -81,7 +81,7 @@ def get_arguments():
 
 def save(saver, sess, logdir, step):
 	"""Save the trained weights.
-	
+ 
 	Args:
 	  saver: TensorFlow Saver object.
 	  sess: TensorFlow session.
@@ -99,7 +99,7 @@ def save(saver, sess, logdir, step):
 
 def load(saver, sess, ckpt_path):
 	"""Load the trained weights.
-	
+ 
 	Args:
 	  saver: TensorFlow Saver object.
 	  sess: TensorFlow session.
@@ -126,6 +126,7 @@ def main():
 	
 	# Create queue coordinator.
 	coord = tf.train.Coordinator()
+	
 	# current step
 	step_ph = tf.placeholder(dtype=tf.float32, shape=())
 	
@@ -149,19 +150,10 @@ def main():
 	labels_mgpu = nn_mgpu.split(label_batch, args.num_gpu)
 	
 	# Create network and output predictions.
-	# outputs_mgpu = model(images_mgpu,
-	# 					 args.num_classes,
-	# 					 args.is_training,
-	# 					 args.use_global_status)
-	
-	outputs_mgpu= []
-	for images in images_mgpu:
-		with tf.device(images.device):
-			outputs = model(images,
+	outputs_mgpu = model(images_mgpu,
 						 args.num_classes,
 						 args.is_training,
 						 args.use_global_status)
-			outputs_mgpu.append(outputs)
 	
 	# Grab variable names which should be restored from checkpoints.
 	restore_var = [
@@ -291,7 +283,6 @@ def main():
 	
 	# Load variables if the checkpoint is provided.
 	if args.restore_from is not None:
-		
 		loader = tf.train.Saver(var_list=restore_var)
 		load(loader, sess, args.restore_from)
 	
@@ -336,5 +327,5 @@ def main():
 
 
 if __name__ == '__main__':
-	os.environ['CUDA_VISIBLE_DEVICES']='0,3'
+	os.environ["CUDA_VISIBLE_DEVICES"] = "4,5,6"
 	main()

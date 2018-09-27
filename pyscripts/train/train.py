@@ -300,5 +300,5 @@ def main():
 	coord.join(threads)
 
 if __name__ == '__main__':
-	os.environ["CUDA_VISIBLE_DEVICES"] = "2,3,6"
+	os.environ["CUDA_VISIBLE_DEVICES"] = "2,3,1"
 	main()

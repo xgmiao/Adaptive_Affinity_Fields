@@ -132,6 +132,11 @@ def main():
 	# current step
 	step_ph = tf.placeholder(dtype=tf.float32, shape=())
 	
+	# Set up tf session and initialize variables.
+	config = tf.ConfigProto()
+	config.gpu_options.allow_growth = True
+	sess = tf.Session(config=config)
+	
 	# Load the data reader.
 	with tf.device('/cpu:0'):
 		with tf.name_scope('create_inputs'):
@@ -146,6 +151,10 @@ def main():
 				IMG_MEAN)
 			image_batch, label_batch = reader.dequeue(args.batch_size)
 	
+	'''
+	image_batch => (N,H,W,C=3)
+	label_batch => (N,H,W,1)
+	'''
 	# Shrink labels to the size of the network output.
 	labels = tf.image.resize_nearest_neighbor(
 		label_batch, innet_size, name='label_shrink')
@@ -174,8 +183,9 @@ def main():
 	labels_gather = tf.to_int32(tf.gather(labels_flat, pixel_inds))
 	seg_losses = []
 	aff_losses = []
-	for i, output in enumerate(outputs):
+	for i, output in enumerate(outputs):   # outputs = (1,N,H,W,C)
 		# Define softmax loss.
+		tf.Print
 		output_2d = tf.reshape(output, [-1, args.num_classes])
 		output_gather = tf.gather(output_2d, pixel_inds)
 		seg_loss = tf.nn.sparse_softmax_cross_entropy_with_logits(
@@ -272,12 +282,12 @@ def main():
 		summary_writer = tf.summary.FileWriter(args.snapshot_dir,
 											   graph=tf.get_default_graph())
 	
-	# Set up tf session and initialize variables.
-	config = tf.ConfigProto()
-	config.gpu_options.allow_growth = True
-	sess = tf.Session(config=config)
-	init = tf.global_variables_initializer()
+	# # Set up tf session and initialize variables.
+	# config = tf.ConfigProto()
+	# config.gpu_options.allow_growth = True
+	# sess = tf.Session(config=config)
 	
+	init = tf.global_variables_initializer()
 	sess.run(init)
 	
 	# Saver for storing checkpoints of the model.
